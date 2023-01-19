@@ -1,0 +1,10 @@
+!**************************************************
+! required for cufft module precision
+! part of Poisson solver, the convolution method (Vorobyov, McKevitt, et al. 2023)
+! Copyright © 2023 Eduard Vorobyov and James McKevitt. All rights reserved.
+!**************************************************
+
+module precision_m
+  integer, parameter, public :: doublePrecision = kind(0.0d0)
+  integer, parameter, public :: fp_kind = doublePrecision
+end module precision_m

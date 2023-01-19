@@ -1,0 +1,61 @@
+!**************************************************
+! define the interfaces to the nvidia cufft routines
+! part of Poisson solver, the convolution method (Vorobyov, McKevitt, et al. 2023)
+! Copyright © 2023 Eduard Vorobyov and James McKevitt. All rights reserved.
+!**************************************************
+
+module cufft_m
+  !integer, parameter, public :: doublePrecision = kind(0.0d0)
+  integer, parameter, public :: CUFFT_FORWARD = -1
+  integer, parameter, public :: CUFFT_INVERSE = 1
+  integer, parameter, public :: CUFFT_Z2Z = Z'69' ! Double-Complex to Double-Complex
+
+  interface cufftPlan3d
+     subroutine cufftPlan3d(plan, nx, ny, nz, type) bind(C,name='cufftPlan3d')
+       use iso_c_binding
+       integer (c_int) :: plan
+       integer (c_int), value :: nx, ny, nz, type
+     end subroutine cufftPlan3d
+  end interface
+
+  interface cufftDestroy
+     subroutine cufftDestroy(plan) bind(C,name='cufftDestroy')
+       use iso_c_binding
+       integer(c_int),value:: plan
+     end subroutine cufftDestroy
+  end interface
+
+  interface cufftExecZ2Z
+     subroutine cufftExecZ2Z(plan, idata, odata, direction) &
+          & bind(C,name='cufftExecZ2Z')
+       use iso_c_binding
+       use precision_m
+       integer(c_int),value:: plan
+       !pgi$ ignore_tkr idata, odata
+       complex(doublePrecision), device:: idata(*), odata(*)
+       integer(c_int),value:: direction
+     end subroutine cufftExecZ2Z
+  end interface
+
+  interface cufftExec
+     subroutine cufftExec(plan, transform, idata, odata, direction)
+       integer :: plan, transform
+       !pgi$ ignore_tkr idata, odata
+       real, device :: idata(*), odata(*)
+       integer, optional :: direction
+     end subroutine cufftExec
+  end interface
+
+end module cufft_m
+
+subroutine cufftExec(plan, transform, idata, odata, direction)
+  use cufft_m
+  implicit none
+
+  integer :: plan, transform
+  real, device :: idata(*), odata(*)
+  integer, optional :: direction
+
+  call cufftExecZ2Z(plan, idata, odata, direction)
+
+end subroutine cufftExec
