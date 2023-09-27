@@ -2,8 +2,11 @@
 Convolution method for nested grids (CM4NG)
 
 This code computes the gravitational potential on nested meshes 
-using the convolution theorem. The method is thoroughly described 
-in Vorobyov, McKevitt, et al., A&A, 2023, in press.
+using the convolution theorem. The method is thoroughly described in 
+Vorobyov, E.I., McKevitt, J. et al. (2023) ‘Computing the
+gravitational potential on nested meshes using the convolution 
+method’, Astronomy & Astrophysics, 671(A81). 
+doi:10.1051/0004-6361/202244701.
 
 ## Copyright statement
 
